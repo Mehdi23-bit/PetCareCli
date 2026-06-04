@@ -63,7 +63,7 @@ class PetManager:
         result = []
         for pet in self._pets:
             for key, value in kwargs.items():
-                if not pet.__dict__.get(key) == value:
+                if not pet.__dict__.get(key) ==type(pet.__dict__.get(key)) (value):
                     match = False
             if match:
                 result.append(pet)
@@ -74,7 +74,7 @@ class PetManager:
         """deleting pets with their names"""
         poped_pet=None
         for index, pet in enumerate(self._pets):
-            if pet.name.casefole() == name.casefold():
+            if pet.name.casefold() == name.casefold():
                 poped_pet = self._pets.pop(index)
                 self._save()
         return poped_pet
@@ -82,7 +82,7 @@ class PetManager:
     def stats(self):
         """returning stats from _pets"""
         ages = [pet.age for pet in self._pets]
-        species = [pet.species for pet in self._pets]
+        species = {pet.species : len([p for p in self._pets if p.species==pet.species ])  for pet in self._pets}
         return {
             "total": len(self._pets),
             "species": species,
