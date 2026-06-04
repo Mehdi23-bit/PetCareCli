@@ -4,27 +4,27 @@
         "age": 4,
         "weight": 20,
         "species": "dog",
-        "created_at": "2026-06-04T21:19:21.274099"
+        "created_at": "2026-06-04T23:44:36.628493"
     },
     "pet2": {
         "name": "pet2",
         "age": 6,
         "weight": 22,
         "species": "dog",
-        "created_at": "2026-06-04T21:19:21.274114"
+        "created_at": "2026-06-04T23:44:36.628520"
     },
     "pet3": {
         "name": "pet3",
         "age": 5,
         "weight": 21,
         "species": "dog",
-        "created_at": "2026-06-04T21:19:21.274121"
+        "created_at": "2026-06-04T23:44:36.628532"
     },
     "rex": {
         "name": "rex",
         "age": 6,
-        "weight": 38,
+        "weight": 45,
         "species": "cat",
-        "created_at": "2026-06-04T21:19:36.984978"
+        "created_at": "2026-06-04T23:45:13.181686"
     }
 }
