@@ -16,7 +16,7 @@ class PetManager:
         if self.file is None:
             raise ValueError("File is None")
         try:
-            with open(self.file, "r") as f:
+            with open(self.file, "r",encoding="utf-8") as f:
                 data = json.load(f)
                 for pet in data:
                     self._pets.append(Pet.from_dict(pet))
@@ -29,7 +29,7 @@ class PetManager:
         if self.file is None:
             raise ValueError("file is None")
         try:
-            with open(self.file, "w") as f:
+            with open(self.file, "w",encoding="utf-8") as f:
 
                 data = json.load(f)
                 for pet in self._pets:
@@ -60,7 +60,7 @@ class PetManager:
         for pet in self._pets:
             for key, value in kwargs.items():
                 if not pet.__dict__.get(key) == value:
-                    match = false
+                    match = False
             if match:
                 result.append(pet)
             match = True
@@ -68,18 +68,19 @@ class PetManager:
 
     def delete(self, name):
         """deleting pets with their names"""
+        poped_pet=None
         for index, pet in enumerate(self._pets):
             if pet.name.casefole() == name.casefold():
-                pet = self._pets.pop(index)
+                poped_pet = self._pets.pop(index)
                 self._save()
-        return pet if pet else None
+        return poped_pet
 
     def stats(self):
         """returning stats from _pets"""
         ages = [pet.age for pet in self._pets]
         species = [pet.species for pet in self._pets]
         return {
-            "total": len(self.pets),
+            "total": len(self._pets),
             "species": species,
             "avg_age": statistics.mean(ages),
             "youngest": min(self._pets, key=lambda pet: pet.age),
