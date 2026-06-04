@@ -129,7 +129,7 @@ class Pet:
         self.age = age
         self.weight = weight
         self.species = species
-        self.created_at = datetime.now()
+        self.created_at = datetime.now().isoformat()
 
     def __repr__(self):
         return f"Pet(name={self.name},age={self.age},species={self.species})"
@@ -143,3 +143,12 @@ class Pet:
             "species": self.species,
             "created_at": self.created_at,
         }
+    @classmethod
+    def from_dict(cls,pet):
+        return cls(
+             pet["name"],
+             pet["age"],
+             pet["weight"],
+             pet["species"]
+        )
+        

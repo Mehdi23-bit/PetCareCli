@@ -19,7 +19,7 @@ class PetManager:
             with open(self.file, "r",encoding="utf-8") as f:
                 data = json.load(f)
                 for pet in data:
-                    self._pets.append(Pet.from_dict(pet))
+                    self._pets.append(Pet.from_dict(data[pet]))
         except (FileNotFoundError, json.JSONDecodeError, PermissionError) as e:
             print(f"Error : {e} ")
             self._pets = []
@@ -29,12 +29,16 @@ class PetManager:
         if self.file is None:
             raise ValueError("file is None")
         try:
-            with open(self.file, "w",encoding="utf-8") as f:
+            with open(self.file, "r",encoding="utf-8") as f:
 
-                data = json.load(f)
-                for pet in self._pets:
-                    if pet.name not in data:
-                        json.dump(pet.as_dict(), f, indent=4)
+               data = json.load(f)
+        except (FileNotFoundError,json.JSONDecodeError, PermissionError):
+            data={}
+        try:
+            with open(self.file,"w",encoding="utf-8") as f:
+     
+                dict_={pet.name:pet.as_dict() for pet in self._pets}
+                json.dump(dict_, f, indent=4)
         except (FileNotFoundError, PermissionError) as e:
             print(f"Error : {e} ")
 

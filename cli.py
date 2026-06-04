@@ -1,6 +1,5 @@
 # cli.py
 import os
-from manager import PetManager
 from models import Pet
 
 def clear():
@@ -32,8 +31,8 @@ def add_pet(manager):
         species = input("  species: ").strip().lower()
         age     = int(input("  age:     ").strip())
         weight  = int(input("  weight:  ").strip())
-        pet = Pet(name, species, age, weight)
-        pet = manager.add(Pet)
+        pet = Pet(name=name, species=species, age=age, weight=weight)
+        pet = manager.add(pet)
         print(f"\n  ✅ '{pet.name}' added successfully!")
 
     except ValueError as e:
@@ -48,9 +47,9 @@ def list_pets(manager):
 def search_pet(manager):
     print("\n── Search ──")
     query   = input("  search (name= ,species= etc ): ").strip()
-    search_keys=query.trim().split(",")
-    dict_={ search_key.trim().split(":")[0]:search_key.trim().split(":")[1] for search_key in search_keys}
-    results = manager.find(dict_)
+    search_keys=query.strip().split(",")
+    dict_={ search_key.strip().split("=")[0]:search_key.strip().split("=")[1] for search_key in search_keys}
+    results = manager.find(**dict_)
     display_pets(results)
 
 
