@@ -1,6 +1,7 @@
 """Pet Manager"""
 import json
 import statistics
+import csv
 from pathlib import Path
 from models import Pet
 class PetManager:
@@ -99,6 +100,23 @@ class PetManager:
             "youngest": min(self._pets, key=lambda pet: self._pets[pet].age) if len(self._pets)>0 else None,
             "oldest":   max(self._pets, key=lambda pet: self._pets[pet].age) if len(self._pets)>0 else None ,
         }
+
+    def export_csv(self,file=None):
+        
+        with open(file,"w",encoding="utf-8") as f:
+            writer= csv.writer(f)
+            writer.writerow(["name","species","age","weight","created_at"])
+            for pet in self._pets:
+                writer.writerow([
+                       self._pets[pet].name,
+                       self._pets[pet].species,
+                       self._pets[pet].age,
+                       self._pets[pet].weight,
+                       self._pets[pet].created_at
+                   ])
+            
+
+
 
     def __iter__(self):
         return iter(self._pets)

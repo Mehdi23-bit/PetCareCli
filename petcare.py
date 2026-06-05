@@ -23,6 +23,8 @@ def main():
             show_stats(manager)
         elif choice == '6':
             update_pet(manager)
+        elif choice == '7':
+            export_csv(manager)
         elif choice == '0':
             print("\n  goodbye! 🐾\n")
             break

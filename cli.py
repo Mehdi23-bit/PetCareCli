@@ -1,5 +1,6 @@
 # cli.py
 import os
+from pathlib import Path
 from models import Pet
 
 def clear():
@@ -91,6 +92,17 @@ def delete_pet(manager):
     except ValueError as e:
         print(f"\n  ❌ {e}")
 
+def export_csv(manager):
+    print("\n export")
+    try:
+        file=input("\n Enter the name of file or skip for default name (pets.csv)  : ")
+        if not file:
+            file='pets.csv'
+        path=Path(file)
+        manager.export_csv(path)
+        print(f"data exported successfuly to {path}")
+    except Exception as e:
+        print(f"Error : {e}")
 
 def show_stats(manager):
     print("\n── Stats ──")
@@ -119,5 +131,6 @@ def menu():
     print("  4. Delete pet")
     print("  5. Stats")
     print("  6. Update")
+    print("  7. Export ")
     print("  0. Exit\n")
     return input("  → ").strip()
