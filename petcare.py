@@ -1,8 +1,9 @@
 # petcare.py
+from colorama  import Fore,Style,init
 from cli import *
 from manager import PetManager
 
-
+init()
 def main():
     manager = PetManager('pets.json')
 
@@ -26,12 +27,13 @@ def main():
         elif choice == '7':
             export_csv(manager)
         elif choice == '0':
-            print("\n  goodbye! 🐾\n")
+            clear()
+            print(f"\n {Fore.CYAN}  goodbye! \n{Style.RESET_ALL}")
             break
         else:
-            print("\n  ❌ invalid choice")
+            print(f"\n{Fore.RED}   invalid choice{Style.RESET_ALL}")
 
-        input("\n  press enter to continue...")
+        input("\n  {Fore.GREEN}press enter to continue...{Style.RESET_ALL}")
 
 
 if __name__ == '__main__':

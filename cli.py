@@ -1,7 +1,10 @@
 # cli.py
 import os
 from pathlib import Path
+from colorama import  Fore,Style,init
 from models import Pet
+
+init()
 
 def clear():
     os.system('clear')
@@ -9,24 +12,28 @@ def clear():
 
 def header():
     print("╔══════════════════════════╗")
-    print("║   PetCare Manager 🐾     ║")
+    print("║      PetCare Manager     ║")
     print("╚══════════════════════════╝\n")
 
 
 def display_pets(pets):
     if not pets:
-        print("  no pets found.")
+        print("{Fore.RED}  no pets found.{Style.RESET_ALL}")
         return
     print(f"\n  {'NAME':<15} {'SPECIES':<10} {'AGE':<5} {'WEIGHT':<8}")
     print(f"  {'─'*15} {'─'*10} {'─'*5} {'─'*8}")
-    for pet in pets:
-        print(f"  {pets[pet].name:<15} {pets[pet].species:<10} {pets[pet].age:<5} {pets[pet].weight:<8}")
+    if isinstance(pets,dict):
+        for pet in pets:
+            print(f"  {pets[pet].name:<15} {pets[pet].species:<10} {pets[pet].age:<5} {pets[pet].weight:<8}")
+    elif isinstance(pets,list):
+        for pet in pets:
+            print(f"  {pet.name:<15} {pet.species:<10} {pet.age:<5} {pet.weight:<8}")
 
     print()
 
 
 def add_pet(manager):
-    print("\n── Add Pet ──")
+    print(f"\n{Fore.CYAN}── Add Pet ──{Style.RESET_ALL}")
     try:
         name    = input("  name:    ").strip()
         print("  species: dog / cat / rabbit / bird / hamster")
@@ -35,19 +42,19 @@ def add_pet(manager):
         weight  = int(input("  weight:  ").strip())
         pet = Pet(name=name, species=species, age=age, weight=weight)
         pet = manager.add(pet)
-        print(f"\n  ✅ '{pet.name}' added successfully!")
+        print(f"\n {Fore.GREEN}  '{pet.name}' added successfully!{Style.RESET_ALL}")
 
     except ValueError as e:
-        print(f"\n  ❌ {e}")
+        print(f"\n {Fore.RED}  {e}{Style.RESET_ALL} ")
 
 
 def list_pets(manager):
-    print("\n── All Pets ──")
+    print(f"\n{Fore.CYAN}── All Pets ──{Style.RESET_ALL}")
     display_pets(manager.all())
 
 
 def search_pet(manager):
-    print("\n── Search ──")
+    print(f"\n{Fore.CYAN}── Search ──{Style.RESET_ALL}")
     query   = input("  search (name= ,species= etc ): ").strip()
     search_keys=query.strip().split(",")
     dict_={ search_key.strip().split("=")[0]:search_key.strip().split("=")[1] for search_key in search_keys}
@@ -56,7 +63,7 @@ def search_pet(manager):
 
 
 def update_pet(manager):
-    print("\n── Update Pet ──")
+    print(f"\n{Fore.CYAN}── Update Pet ──{Style.RESET_ALL}")
     try:
         name = input("  pet name: ").strip()
         result=manager.find(name=name) 
@@ -78,34 +85,34 @@ def update_pet(manager):
            if dict_[attr]:
                kwargs[attr]=dict_[attr]		
         manager.update(name,**kwargs)
-        print(f"{name} is updated successfuly")
+        print(f"{Fore.GREEN}{name} is updated successfuly{Style.RESET_ALL}")
     except ValueError as e:
-        print(f"Error : {e}")
+        print(f"{Fore.RED}Error : {e}{Style.RESET_ALL}")
 
 
 def delete_pet(manager):
-    print("\n── Delete Pet ──")
+    print(f"\n{Fore.CYAN}── Delete Pet ──{Style.RESET_ALL}")
     try:
         name = input("  pet name: ").strip()
         pet  = manager.delete(name)
-        print(f"\n  ✅ '{pet.name}' deleted.")
+        print(f"\n {Fore.GREEN}  '{pet.name}' deleted.{Style.RESET_ALL}")
     except ValueError as e:
-        print(f"\n  ❌ {e}")
+        print(f"\n  {Fore.RED} {e}{Style.RESET_ALL}")
 
 def export_csv(manager):
-    print("\n export")
+    print(f"\n {Fore.CYAN} export csv{Style.RESET_ALL}")
     try:
         file=input("\n Enter the name of file or skip for default name (pets.csv)  : ")
         if not file:
             file='pets.csv'
         path=Path(file)
         manager.export_csv(path)
-        print(f"data exported successfuly to {path}")
+        print(f"{Fore.GREEN}data exported successfuly to {path}{Style.RESET_ALL}")
     except Exception as e:
-        print(f"Error : {e}")
+        print(f"{Fore.RED}Error : {e}{Style.RESET_ALL}")
 
 def show_stats(manager):
-    print("\n── Stats ──")
+    print(f"\n{Fore.CYAN}── Stats ──{Style.RESET_ALL}")
     stats = manager.stats()
     if not stats:
         print("  no pets yet.")
