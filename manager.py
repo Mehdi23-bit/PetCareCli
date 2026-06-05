@@ -8,7 +8,7 @@ class PetManager:
 
     def __init__(self, file="pets.json"):
         self.file = Path(file)
-        self._pets = []
+        self._pets = {}
         self._load()
 
     def _load(self):
@@ -19,10 +19,10 @@ class PetManager:
             with open(self.file, "r",encoding="utf-8") as f:
                 data = json.load(f)
                 for pet in data:
-                    self._pets.append(Pet.from_dict(data[pet]))
+                    self._pets[pet]=Pet.from_dict(data[pet])
         except (FileNotFoundError, json.JSONDecodeError, PermissionError) as e:
             print(f"Error : {e} ")
-            self._pets = []
+            self._pets = {}
 
     def _save(self):
         """saving pets in file"""
@@ -37,7 +37,7 @@ class PetManager:
         try:
             with open(self.file,"w",encoding="utf-8") as f:
      
-                dict_={pet.name:pet.as_dict() for pet in self._pets}
+                dict_={self._pets[pet].name:self._pets[pet].as_dict() for pet in self._pets}
                 json.dump(dict_, f, indent=4)
         except (FileNotFoundError, PermissionError) as e:
             print(f"Error : {e} ")
@@ -48,11 +48,20 @@ class PetManager:
         if not isinstance(pet, Pet):
             raise ValueError("pet is not instance of Pet class")
 
-        if pet not in self._pets:
-            self._pets.append(pet)
-        self._save()
-        return pet
+        if pet.name  not in self._pets:
+            self._pets[pet.name]=pet
+            self._save()
+            return pet
+        raise ValueError(f"{pet.name} already existed")    
 
+    def update(self,Updatedname,**kwargs):
+        """ update the pet by name  """
+        pet=self.find(name=Updatedname)[0]
+        for key,value in kwargs.items():
+            pet.__dict__[key]=value
+        self.delete(Updatedname)
+        self.add(pet)
+        self._save()            
     def all(self):
         """returning all pets"""
         return self._pets
@@ -63,32 +72,32 @@ class PetManager:
         result = []
         for pet in self._pets:
             for key, value in kwargs.items():
-                if not pet.__dict__.get(key) ==type(pet.__dict__.get(key)) (value):
+                if not self._pets[pet].__dict__.get(key) ==type(self._pets[pet].__dict__.get(key)) (value):
                     match = False
             if match:
-                result.append(pet)
+                result.append(self._pets[pet])
             match = True
         return result if result else None
 
     def delete(self, name):
         """deleting pets with their names"""
-        poped_pet=None
-        for index, pet in enumerate(self._pets):
-            if pet.name.casefold() == name.casefold():
-                poped_pet = self._pets.pop(index)
+        iter_=self._pets
+        for pet in iter_:
+            if iter_[pet].name.casefold() == name.casefold():
+                poped_pet = self._pets.pop(pet)
                 self._save()
-        return poped_pet
-
+                return poped_pet
+        raise ValueError(f"No pet found with the name {name}")
     def stats(self):
         """returning stats from _pets"""
-        ages = [pet.age for pet in self._pets]
-        species = {pet.species : len([p for p in self._pets if p.species==pet.species ])  for pet in self._pets}
+        ages = [self._pets[pet].age for pet in self._pets]
+        species = {pet.species : len([p for p in self._pets if p.species==self._pets[pet].species ])  for pet in self._pets}
         return {
-            "total": len(self._pets),
-            "species": species,
-            "avg_age": statistics.mean(ages),
-            "youngest": min(self._pets, key=lambda pet: pet.age),
-            "oldest": max(self._pets, key=lambda pet: pet.age),
+            "total":    len(self._pets),
+            "species":  species if species else None,
+            "avg_age":  statistics.mean(ages) if len(self._pets)> 0 else None,
+            "youngest": min(self._pets, key=lambda pet: self._pets[pet].age) if len(self._pets)>0 else None,
+            "oldest":   max(self._pets, key=lambda pet: self._pets[pet].age) if len(self._pets)>0 else None ,
         }
 
     def __iter__(self):

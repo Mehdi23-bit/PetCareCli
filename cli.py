@@ -19,7 +19,8 @@ def display_pets(pets):
     print(f"\n  {'NAME':<15} {'SPECIES':<10} {'AGE':<5} {'WEIGHT':<8}")
     print(f"  {'─'*15} {'─'*10} {'─'*5} {'─'*8}")
     for pet in pets:
-        print(f"  {pet.name:<15} {pet.species:<10} {pet.age:<5} {pet.weight:<8}")
+        print(f"  {pets[pet].name:<15} {pets[pet].species:<10} {pets[pet].age:<5} {pets[pet].weight:<8}")
+
     print()
 
 
@@ -53,6 +54,34 @@ def search_pet(manager):
     display_pets(results)
 
 
+def update_pet(manager):
+    print("\n── Update Pet ──")
+    try:
+        name = input("  pet name: ").strip()
+        result=manager.find(name=name) 
+        if not result:
+            raise ValueError(f"{name} pet is not found")
+        pet=result[0]
+        print(f"Pet is found : {pet}")
+        print(f"change the attributes you want ,others just skip them : ")
+        dict_={}
+        dict_["name"]  = input("  name:    ").strip()
+        print("  species: dog / cat / rabbit / bird / hamster")
+        dict_["species"] = input("  species: ").strip().lower()
+        age     = input("  age:     ").strip()
+        weight  = input("  weight:  ").strip()
+        dict_["age"]= int(age) if age else None
+        dict_["weight"]= int(weight) if weight else None
+        kwargs={}
+        for attr in dict_:
+           if dict_[attr]:
+               kwargs[attr]=dict_[attr]		
+        manager.update(name,**kwargs)
+        print(f"{name} is updated successfuly")
+    except ValueError as e:
+        print(f"Error : {e}")
+
+
 def delete_pet(manager):
     print("\n── Delete Pet ──")
     try:
@@ -69,15 +98,18 @@ def show_stats(manager):
     if not stats:
         print("  no pets yet.")
         return
-    print(f"  total pets:    {stats['total']}")
-    print(f"  average age:   {stats['avg_age']} years")
-    print(f"  youngest:      {stats['youngest'].name} ({stats['youngest'].age})")
-    print(f"  oldest:        {stats['oldest'].name} ({stats['oldest'].age})")
+    print(f"  total pets:    { stats['total']}")
+    print(f"  average age:   {stats['avg_age'] +' years' if stats['avg_age'] else '-'}")
+    print(f"  youngest:      {stats['youngest'].name if stats['youngest'] else '-'} ({stats['youngest'].age if stats['youngest'] else '-' })")
+    print(f"  oldest:        {stats['oldest'].name if stats['oldest'] else '-'} ({stats['oldest'].age if stats['oldest'] else '-'  })")
     print(f"\n  species breakdown:")
-    for species, count in stats['species'].items():
-        print(f"    {species:<12} → {count}")
+    if stats['total']>0:
+        for species, count in stats['species'].items():
+            print(f"    {species:<12} → {count}")
 
+    else:
 
+        print("  (-)")
 
 
 def menu():
@@ -86,5 +118,6 @@ def menu():
     print("  3. Search")
     print("  4. Delete pet")
     print("  5. Stats")
+    print("  6. Update")
     print("  0. Exit\n")
     return input("  → ").strip()

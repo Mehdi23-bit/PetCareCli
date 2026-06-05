@@ -21,6 +21,8 @@ def main():
             delete_pet(manager)
         elif choice == '5':
             show_stats(manager)
+        elif choice == '6':
+            update_pet(manager)
         elif choice == '0':
             print("\n  goodbye! 🐾\n")
             break
