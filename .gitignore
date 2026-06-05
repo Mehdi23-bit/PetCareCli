@@ -1,4 +1,8 @@
 .venv/
-pets.json
-pets.csv
+__pycache__/
+*.json
+*.csv
+*.log
+*.pyc
+
 
